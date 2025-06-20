@@ -23,6 +23,7 @@ export default function RootLayout() {
             presentation: 'modal',
             title: 'Quick Actions'
           }} />
+          <Stack.Screen name="+not-found" options={{ title: 'oops' }} />
         </Stack>
       </PaperWrapper>
     </ThemeProvider>
