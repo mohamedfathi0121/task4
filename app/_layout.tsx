@@ -1,29 +1,39 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import { PaperProvider } from 'react-native-paper';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
+    <ThemeProvider>
+      <PaperWrapper>
+        <StatusBar style="auto" />
+        <Stack screenOptions={{
+          headerStyle: {
+            backgroundColor: '#4A6FA5',
+          },
+          headerTintColor: '#fff',
+        }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="prayers/[id]" options={{ title: 'Prayer Details' }} />
+          <Stack.Screen name="reminders/index" options={{ title: 'Set Reminders' }} />
+          <Stack.Screen name="modal" options={{ 
+            presentation: 'modal',
+            title: 'Quick Actions'
+          }} />
+        </Stack>
+      </PaperWrapper>
     </ThemeProvider>
+  );
+}
+
+function PaperWrapper({ children }: { children: React.ReactNode }) {
+  const theme = useTheme();
+  return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      {children}
+    </View>
   );
 }
